@@ -12,6 +12,8 @@
 
 using namespace std;
 
+int minSolutions;
+
 Solver::Solver(void)
 // Phase 1 move mapping tables
 : twistMoveTable(cube), flipMoveTable(cube), choiceMoveTable(cube),
@@ -130,7 +132,7 @@ int Solver::Solve(RubiksCube& scrambledCube)
         
         // Count interative deepenings
         iteration++;
-    } while (result == NOT_FOUND);
+    } while (result == NOT_FOUND && threshold1 <= 15);
     
     cout << "Phase 1 nodes = " << nodes1 << endl;
     return result;
@@ -265,8 +267,10 @@ int Solver::Search2(int cornerPermutation, int nonMiddleSliceEdgePermutation, in
     
     if (cost == 0) {	// Solution found...
         solutionLength2 = depth;	// Save phase 2 solution length
-        if (solutionLength1 + solutionLength2 < minSolutionLength)
-            minSolutionLength = solutionLength1 + solutionLength2;
+        int totalSolution = solutionLength1 + solutionLength2;
+        if (totalSolution < minSolutionLength)
+            minSolutionLength = totalSolution;
+            minSolutions = totalSolution;
         PrintSolution();
         return FOUND;
     }

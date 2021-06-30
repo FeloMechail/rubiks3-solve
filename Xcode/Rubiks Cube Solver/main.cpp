@@ -6,9 +6,20 @@
 #include "Solver.hpp"
 
 using namespace std;
+void input( string *inpu );
 
 int main(int argc, char *argv[]) {
     unsigned int status;
+    
+    string Array[6];
+    string *p;
+    p = Array;
+    
+    input(p);
+    
+    for(int i = 0; i < 6; i++){
+        cout << Array[i] << endl;
+    }
     
     string faceletStrings[6] = {
         "U:RWGGWRWWW", "D:YBGGYYBOW", "F:RRROBYRWW", "B:OOYOGROYY", "L:GWBGOBOYB", "R:GBYRRGOBB"
@@ -17,7 +28,7 @@ int main(int argc, char *argv[]) {
     // Parse the input and initialize FaceletCube
     FaceletCube faceletCube;
     CubeParser cubeParser;
-    if((status = cubeParser.parseFacelets(faceletStrings, faceletCube)) != CubeParser::VALID) {
+    if((status = cubeParser.parseFacelets(Array, faceletCube)) != CubeParser::VALID) {
         cout << cubeParser.ErrorText(status) << endl;
         return 1;
     }
@@ -36,5 +47,40 @@ int main(int argc, char *argv[]) {
     solver.InitializeTables();
     solver.Solve(cube);
     
+    cout << "DONE" << endl;
     return 0;
 }	
+
+//function to recieve custom rubiks input
+void input( string *inpu ){
+    string U, D, F, B, L, R;
+    
+    cout << "Enter Rubiks cube" << endl;
+    cout << "U: ";
+    cin >> U;
+    U = "U:" + U;
+    cout << "D: ";
+    cin >> D;
+    D = "D:" + D;
+    cout << "F: ";
+    cin >> F;
+    F = "F:" + F;
+    cout << "B: ";
+    cin >> B;
+    B = "B:" + B;
+    cout << "L: ";
+    cin >> L;
+    L = "L:"+ L;
+    cout << "R: ";
+    cin >> R;
+    R = "R:" + R;
+    
+    *(inpu + 0) = U;
+    *(inpu + 1) = D;
+    *(inpu + 2) = F;
+    *(inpu + 3) = B;
+    *(inpu + 4) = L;
+    *(inpu + 5) = R;
+
+}
+    
