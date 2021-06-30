@@ -10,25 +10,30 @@ void input( string *inpu );
 
 int main(int argc, char *argv[]) {
     unsigned int status;
+    int mov;
     
     string Array[6];
     string *p;
     p = Array;
     
-    input(p);
+    cout << "Minimum moves: ";
+    cin >> mov;
+    //input(p);
     
-    for(int i = 0; i < 6; i++){
-        cout << Array[i] << endl;
-    }
+    
     
     string faceletStrings[6] = {
-        "U:RWGGWRWWW", "D:YBGGYYBOW", "F:RRROBYRWW", "B:OOYOGROYY", "L:GWBGOBOYB", "R:GBYRRGOBB"
+       "U:RWGGWRWWW", "D:YBGGYYBOW", "F:RRROBYRWW", "B:OOYOGROYY", "L:GWBGOBOYB", "R:GBYRRGOBB"
     };
+    
+    //string faceletStrings[6] = {
+      //  "U:WWRWWRWWR", "D:YYOYYOYYO", "F:RRYRRYRRY", "B:WOOWOOWOO", "L:GGGGGGGGG", "R:BBBBBBBBB"
+   // };
     
     // Parse the input and initialize FaceletCube
     FaceletCube faceletCube;
     CubeParser cubeParser;
-    if((status = cubeParser.parseFacelets(Array, faceletCube)) != CubeParser::VALID) {
+    if((status = cubeParser.parseFacelets(faceletStrings, faceletCube)) != CubeParser::VALID) {
         cout << cubeParser.ErrorText(status) << endl;
         return 1;
     }
@@ -45,7 +50,7 @@ int main(int argc, char *argv[]) {
     // Initialize tables and solve
     Solver solver;
     solver.InitializeTables();
-    solver.Solve(cube);
+    solver.Solve(cube, mov);
     
     cout << "DONE" << endl;
     return 0;
@@ -54,7 +59,6 @@ int main(int argc, char *argv[]) {
 //function to recieve custom rubiks input
 void input( string *inpu ){
     string U, D, F, B, L, R;
-    
     cout << "Enter Rubiks cube" << endl;
     cout << "U: ";
     cin >> U;
@@ -74,6 +78,7 @@ void input( string *inpu ){
     cout << "R: ";
     cin >> R;
     R = "R:" + R;
+    
     
     *(inpu + 0) = U;
     *(inpu + 1) = D;

@@ -103,7 +103,7 @@ void Solver::InitializeTables(void)
     cout << "Size = " << EdgeAndSlicePruningTable.SizeOf() << endl;
 }
 
-int Solver::Solve(RubiksCube& scrambledCube)
+int Solver::Solve(RubiksCube& scrambledCube, int minSolve)
 {
     int iteration = 1;
     int result = NOT_FOUND;
@@ -125,20 +125,20 @@ int Solver::Solve(RubiksCube& scrambledCube)
         newThreshold1 = Huge;	// Any cost will be less than this
         
         // Perform the phase 1 recursive IDA* search
-        result = Search1(cube.Twist(), cube.Flip(), cube.Choice(), 0);
+        result = Search1(cube.Twist(), cube.Flip(), cube.Choice(), 0, minSolve);
         
         // Establish a new threshold for a deeper search
         threshold1 = newThreshold1;
         
         // Count interative deepenings
         iteration++;
-    } while (result == NOT_FOUND && threshold1 <= 15);
+    } while (result == NOT_FOUND);
     
     cout << "Phase 1 nodes = " << nodes1 << endl;
     return result;
 }
 
-int Solver::Search1(int twist, int flip, int choice, int depth)
+int Solver::Search1(int twist, int flip, int choice, int depth, int minSolve)
 {
     int cost, totalCost;
     int move;
@@ -185,7 +185,7 @@ int Solver::Search1(int twist, int flip, int choice, int depth)
         //   can exit indicating such.  Note: the first
         //   complete solution found in phase1 is optimal
         //   due to it being an addmissible IDA* search.
-        if (depth >= minSolutionLength-1)
+        if (minSolutions == minSolve ||depth >= minSolutionLength-1)
             return OPTIMUM_FOUND;
         
         for (move = Cube::Move::R; move <= Cube::Move::B; move++)
@@ -205,7 +205,7 @@ int Solver::Search1(int twist, int flip, int choice, int depth)
                 choice2 = choiceMoveTable[choice2][move];
                 nodes1++;
                 // Apply the move
-                if((result = Search1(twist2, flip2, choice2, depth+1)))
+                if((result = Search1(twist2, flip2, choice2, depth+1, minSolve)))
                     return result;
             }
         }
@@ -244,7 +244,7 @@ int Solver::Solve2(RubiksCube& cube)
         
         // Establish a new threshold for a deeper search
         threshold2 = newThreshold2;
-        
+                
         // Count interative deepenings
         iteration++;
     } while (result == NOT_FOUND);
@@ -270,7 +270,8 @@ int Solver::Search2(int cornerPermutation, int nonMiddleSliceEdgePermutation, in
         int totalSolution = solutionLength1 + solutionLength2;
         if (totalSolution < minSolutionLength)
             minSolutionLength = totalSolution;
-            minSolutions = totalSolution;
+            minSolutions = minSolutionLength;
+        
         PrintSolution();
         return FOUND;
     }

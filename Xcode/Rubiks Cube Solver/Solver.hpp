@@ -84,7 +84,7 @@ public:
     void InitializeTables(void);
     
     // Perform the two phase search
-    int Solve(RubiksCube &scrambledCube);
+    int Solve(RubiksCube &scrambledCube, int minSolve);
     // Solver return codes
     enum {
         NOT_FOUND,	// A solution was not found
@@ -106,7 +106,7 @@ private:
     int Solve2(RubiksCube &cube);
     
     // Phase 1 & 2 recursive IDA* search routines
-    int Search1(int twist, int flip, int choice, int depth);
+    int Search1(int twist, int flip, int choice, int depth, int minSolve);
     int Search2(
                 int cornerPermutation,
                 int nonMiddleSliceEdgePermutation,
